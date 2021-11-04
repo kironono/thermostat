@@ -1,0 +1,44 @@
+# vim:fenc=utf-8 ff=unix ft=yaml :
+
+version: "2"
+services:
+  app:
+    platform: "linux/amd64"
+    build:
+      context: "docker/app"
+      dockerfile: "Dockerfile"
+    volumes:
+      - ".:/app"
+      - "bundler-data:/usr/local/bundle"
+      - "node_modules-data:/app/node_modules"
+    ports:
+      - "3000:3000"
+    links:
+      - db
+    environment:
+      DB_HOST: "db"
+      DB_PORT: 5432
+      DB_USERNAME: "postgres"
+      DB_PASSWORD: "password"
+      DB_NAME: "thermostat"
+    tty: true
+    stdin_open: true
+    command: "rails s -b 0.0.0.0 -p 3000"
+  db:
+    platform: "linux/amd64"
+    build:
+      context: "docker/db"
+      dockerfile: "Dockerfile"
+    environment:
+      POSTGRES_PASSWORD: "password"
+    volumes:
+      - "db-data:/var/lib/postgresql/data"
+
+
+volumes:
+  bundler-data:
+    driver: "local"
+  node_modules-data:
+    driver: "local"
+  db-data:
+    driver: "local"

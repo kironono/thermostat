@@ -33,12 +33,28 @@ services:
       POSTGRES_PASSWORD: "password"
     volumes:
       - "db-data:/var/lib/postgresql/data"
-
+  elasticsearch:
+    build:
+      context: "docker/elasticsearch"
+      dockerfile: "Dockerfile"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+    environment:
+      - "discovery.type=single-node"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - "elasticsearch-data:/usr/share/elasticsearch/data"
 
 volumes:
   bundler-data:
     driver: "local"
   node_modules-data:
+    driver: "local"
+  elasticsearch-data:
     driver: "local"
   db-data:
     driver: "local"

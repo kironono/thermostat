@@ -48,6 +48,13 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     volumes:
       - "elasticsearch-data:/usr/share/elasticsearch/data"
+  cerebro:
+    platform: "linux/amd64"
+    build:
+      context: "docker/cerebro"
+      dockerfile: "Dockerfile"
+    ports:
+      - "9000:9000"
 
 volumes:
   bundler-data:

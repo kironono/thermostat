@@ -4,4 +4,8 @@ Rails.application.routes.draw do
   resources :organizations, only: %i[show], param: :name do
     resources :projects, only: %i[index show], param: :name
   end
+
+  namespace :api do
+    resources :events, only: [:create]
+  end
 end
